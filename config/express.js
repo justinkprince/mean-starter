@@ -12,7 +12,7 @@ var cookieSession = require('cookie-session');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var csrf = require('csurf');
-var swig = require('swig');
+var nunjucks = require('nunjucks');
 
 var mongoStore = require('connect-mongo')(session);
 var flash = require('connect-flash');
@@ -55,16 +55,18 @@ module.exports = function (app, passport) {
   // Logging middleware
   if (env !== 'test') app.use(morgan(log));
 
-  // Swig templating engine settings
+  var nunjucksConfig = {
+    autoescape: true,
+    express: app
+  };
+
+  // Nunjucks templating engine settings
   if (env === 'development' || env === 'test') {
-    swig.setDefaults({
-      cache: false
-    });
+     nunjucksConfig.noCache = true;
   }
 
-  // set views path, template engine and default layout
-  app.engine('html', swig.renderFile);
-  app.set('views', config.root + '/app/views');
+  nunjucks.configure(config.root + '/app/views', nunjucksConfig);
+  app.engine('html', nunjucks.render);
   app.set('view engine', 'html');
 
   // expose package.json to views
