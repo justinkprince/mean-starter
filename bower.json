@@ -1,0 +1,19 @@
+{
+  "name": "mean-starter",
+  "version": "0.0.0",
+  "homepage": "https://github.com/justinkprince/mean-skeleton",
+  "authors": [
+    "Justin Prince <justinkprince@gmail.com>"
+  ],
+  "moduleType": [
+    "node"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
