@@ -3,24 +3,38 @@ var sass = require('gulp-sass') ;
 var notify = require("gulp-notify") ;
 var bower = require('gulp-bower');
 
-var config = {
-     sassPath: './resources/sass',
-     bowerDir: './bower_components' 
+var paths = {
+     sassSrcPath: './resources/sass',
+     bowerDir: './bower_components' ,
+    assetsPath: './public/assets'
 };
-
-gulp.task('sass', function () {
-    gulp.src('./resources/sass/**/*.scss')
-        .pipe(sass().on('error', sass.logError))
-        .pipe(gulp.dest('./public/css'));
-});
 
 gulp.task('bower', function() { 
     return bower()
-         .pipe(gulp.dest(config.bowerDir)) ;
+         .pipe(gulp.dest(paths.bowerDir)) ;
 });
 
  gulp.task('watch', function() {
-     gulp.watch(config.sassPath + '/**/*.scss', ['css']); 
+     gulp.watch(paths.sassPath + '/**/*.scss', ['css']); 
 });
 
-  gulp.task('default', ['bower', 'css']);
+gulp.task('css', function () {
+    gulp.src(paths.sassSrcPath + '/**/*.scss')
+        .pipe(sass().on('error', sass.logError))
+        .pipe(gulp.dest(paths.assetsPath + '/css'));
+});
+
+gulp.task('js', function() {
+    gulp.src(paths.bowerDir + '/**/*.js')
+        .pipe(gulp.dest(paths.assetsPath + '/js/vendor'));
+    gulp.src(paths.assetsPath + '/js/**/*.js')
+        .pipe(gulp.dest(paths.assetsPath + '/js'));
+});
+
+gulp.task('fonts', function() {
+    gulp.src(paths.bowerDir + '/**/*.{ttf,woff,eof,svg}')
+        .pipe(gulp.dest(paths.assetsPath + '/fonts'));
+});
+
+gulp.task('assets', ['css', 'js', 'fonts']);
+  gulp.task('default', ['bower', 'assets']);
